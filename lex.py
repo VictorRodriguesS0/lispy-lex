@@ -23,4 +23,12 @@ def lex(code: str) -> Iterable[Token]:
         ("QUOTE", r"\'"),
     ]
 
+    code = re.sub(r";;.*", "", code)
+    regex = '|'.join('(?P<%s>%s)' % pair for pair in tokens)
+
+    for token in re.finditer(regex, code):
+        kind = token.lastgroup
+        value = token.group()
+        yield Token(kind, value)
+
     return [Token('INVALIDA', 'valor inválido')]
